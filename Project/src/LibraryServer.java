@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
+import javax.swing.JFrame;
+
 import page.CenterPanel;
 
 
@@ -24,7 +26,11 @@ public class LibraryServer {
 	
 	public static void main(String[] args) {			
 		
-		
+		JFrame serverf = new JFrame();
+		serverf.setVisible(true);
+		serverf.setDefaultCloseOperation(serverf.EXIT_ON_CLOSE);
+		serverf.setSize(300, 400);
+		serverf.setLocation(600, 400);
 		
 		
 		try{		
@@ -122,8 +128,8 @@ class ChatThread extends Thread{
 					if(line.indexOf("/login") == 0){
 						login(oos,line);
 					}
-					if(line.indexOf("/to ") == 0){	
-						sendmsg(line);
+					if(line.indexOf("/sign") == 0){	
+						sign(oos,line);
 					}if(line.equals("/list")){
 							
 					}
@@ -174,6 +180,9 @@ class ChatThread extends Thread{
 	}
 	
 	public void login(ObjectOutputStream oos, String line){
+		
+	}
+	public void sign(ObjectOutputStream oos, String line){
 		
 	}
 }				
