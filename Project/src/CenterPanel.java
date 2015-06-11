@@ -10,6 +10,7 @@ public class CenterPanel implements Serializable{
 	CenterPanel(JPanel jp, String name){
 		this.jp = jp;
 		this.name = name;
+		
 	}
 	
 	JPanel getPanel(){

@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 
 public class LibraryServer {
@@ -26,6 +28,7 @@ public class LibraryServer {
 				Socket sock = server.accept();
 				ChatThread chatthread = new ChatThread(sock, hm,dm);
 				chatthread.start();
+				
 			} // while	
 		}catch(Exception e){	
 			System.out.println(e);
@@ -35,6 +38,8 @@ public class LibraryServer {
 
 
 class ChatThread extends Thread{			
+
+	private ObjectOutputStream oos;
 	private Socket sock;		
 	private String id;		
 	private BufferedReader br;		
@@ -55,6 +60,8 @@ class ChatThread extends Thread{
 			
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));	
 			br = new BufferedReader(new InputStreamReader(sock.getInputStream()));	
+			
+			
 			id = br.readLine();	
 			broadcast(strtime+" "+id + "님이 접속하였습니다.");	
 			System.out.println("접속한 사용자의 아이디는 " + id + "입니다.");	

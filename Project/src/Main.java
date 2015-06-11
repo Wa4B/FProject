@@ -4,6 +4,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 
 public class Main {
@@ -14,7 +16,7 @@ public class Main {
 	
 	
 	public static void main(String[] args){
-		String arg[] = {"상록도서관","192.168.0.159"};
+		String arg[] = {"상록도서관","192.168.0.159"};//도서관 이름, ip주소
 		if(arg.length != 2){	
 			System.out.println("사용법 : java ChatClient id 접속할서버ip");
 			System.exit(1);
