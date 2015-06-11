@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JPanel;
 
+import page.CenterPanel;
+
 
 public class Main {
 	
@@ -95,7 +97,7 @@ class InputThread extends Thread{
 			while((ob = ois.readObject()) != null){		
 				if(ob instanceof CenterPanel){
 					CenterPanel cp = (CenterPanel)ob;
-					
+					cp.setSocket(sock);
 					gui.setCenter(cp);
 					System.out.println(cp.getName());
 				}

@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import page.CenterPanel;
+
 public class DataManager {
 	
 	private ArrayList<Book> book = new ArrayList<Book>();

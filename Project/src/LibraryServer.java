@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
+import page.CenterPanel;
+
 
 public class LibraryServer {
 	
@@ -55,6 +57,7 @@ public class LibraryServer {
 class ChatThread extends Thread{			
 
 	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	private Socket sock;		
 	private String id;		
 	private BufferedReader br;		
@@ -90,7 +93,8 @@ class ChatThread extends Thread{
 			
 			ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
-			
+			this.oos = oos;
+			this.ois = ois;
 			id = (String)ois.readObject();
 			
 			libname = id;
@@ -111,7 +115,7 @@ class ChatThread extends Thread{
 			SimpleDateFormat dtime = new SimpleDateFormat("[hhΩ√ mm∫– ss√ ]");
 			String strtime= dtime.format(new Date(time));
 			String line = null;	
-			while((line = br.readLine()) != null){		
+			while((line = ois.readLine()) != null){		
 				if(line.equals("/quit"))	
 					break;
 				if(line.indexOf("/to ") == 0){	

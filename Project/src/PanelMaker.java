@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import page.CenterPanel;
+import page.MainPage;
+
 
 public class PanelMaker {
 	
@@ -24,25 +27,11 @@ public class PanelMaker {
 	}
 	
 	public void mainpage(){
-		CenterPanel jp = new CenterPanel("mainpage");
-		JFrame jf = new JFrame();
 		
-		jp.setBackground(Color.PINK);
 		
-		JButton bt = new JButton("¹öÆ°");
-		bt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				JFrame jf2 = new JFrame();
-				jf2.setVisible(true);
-				
-			}
-		});
-		jp.add(bt);
-		jf.add(jp);
-		jf.setVisible(true);
-		jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
 		
-		jplist.add(jp);
+		jplist.add(new MainPage());
+		
 		
 	}
 	
