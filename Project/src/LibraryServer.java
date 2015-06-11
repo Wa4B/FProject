@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +17,22 @@ import java.io.ObjectInputStream;
 
 
 public class LibraryServer {
+	
+	
+	
 	public static void main(String[] args) {			
 		
-		DataManager dm = new DataManager();
+		
 		
 		
 		try{		
 			ServerSocket server = new ServerSocket(10001);	
 			System.out.println("접속을 기다립니다.");	
-			HashMap hm = new HashMap();	
+			HashMap hm = new HashMap();
 			
 			while(true){	
 				Socket sock = server.accept();
-				ChatThread chatthread = new ChatThread(sock, hm,dm);
+				ChatThread chatthread = new ChatThread(sock, hm);
 				chatthread.start();
 				
 			} // while	
@@ -34,6 +40,7 @@ public class LibraryServer {
 			System.out.println(e);
 		}	
 	} // main
+	
 }
 
 
@@ -47,11 +54,16 @@ class ChatThread extends Thread{
 	private DataManager dm;
 	private boolean initFlag = false;	
 	
-	public ChatThread(Socket sock, HashMap hm,DataManager dm){	
+	private ArrayList<Book> book;
+	private ArrayList<User> user;	
+	private ArrayList<Library> library;	
+	private ArrayList<CenterPanel> cplist;	
+	
+	public ChatThread(Socket sock, HashMap hm){	
 		
 		this.sock = sock;	
 		this.hm = hm;	
-		this.dm = dm;
+		this.dm = new DataManager(book,user,library,cplist);
 		
 		try{	
 			long time = System.currentTimeMillis();

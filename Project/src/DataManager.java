@@ -12,8 +12,15 @@ public class DataManager {
 	private ArrayList<Book> book;
 	private ArrayList<User> user;	
 	private ArrayList<Library> library;	
+	private ArrayList<CenterPanel> cplist;	
+	DataManager(ArrayList<Book> book,ArrayList<User> user,ArrayList<Library> library,ArrayList<CenterPanel> cplist){
+		this.book = book;
+		this.user = user;
+		this.library = library;
+		this.cplist = cplist;
+	}
 	DataManager(){
-		
+		Allopen();
 	}
 	
 	ArrayList<Book> getbook(){
@@ -31,6 +38,7 @@ public class DataManager {
 		OpenUser();
 		OpenBook();
 		OpenLibrary();
+		OpenPanel();
 	}
 	public void Allsave(){
 		SaveUser();
@@ -210,6 +218,34 @@ public class DataManager {
 			try{
 				oos.close();
 				fout.close();
+			}catch(IOException ioe){}
+		} // finally
+	}
+	public void OpenPanel(){
+		FileInputStream fin = null;
+		ObjectInputStream ois = null;
+
+		try{
+			
+			fin = new FileInputStream("jplist.dat");
+			ois = new ObjectInputStream(fin);
+			
+			cplist.clear();
+			
+			ArrayList list = (ArrayList)ois.readObject();
+			
+			
+			for(int i = 0 ; i < list.size() ; i+=1){
+				cplist.add((CenterPanel)list.get(i));
+			}
+			
+			System.out.println("jplist.dat open.");
+			
+		}catch(Exception ex){
+		}finally{
+			try{
+				ois.close();
+				fin.close();
 			}catch(IOException ioe){}
 		} // finally
 	}
