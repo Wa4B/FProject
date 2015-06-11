@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import page.CenterPanel;
@@ -97,9 +99,18 @@ class InputThread extends Thread{
 			while((ob = ois.readObject()) != null){		
 				if(ob instanceof CenterPanel){
 					CenterPanel cp = (CenterPanel)ob;
-					cp.setSocket(sock);
+					cp.setOos(oos);
+					cp.setOis(ois);
+					cp.setSock(sock);
 					gui.setCenter(cp);
 					System.out.println(cp.getName());
+				}
+				
+				if(ob instanceof String){
+					String str = (String)ob;
+					if(str.indexOf("/sign")==0){
+						sign(str);
+					}
 				}
 				
 			}		
@@ -114,5 +125,35 @@ class InputThread extends Thread{
 					sock.close();
 			}catch(Exception ex){}		
 		}			
-	} // InputThread				
+	} // InputThread	
+	public void sign(String line){
+		String res = line.substring(7);
+		
+		if(res.equals("com")){
+			JPanel wmp2 = new JPanel();
+			wmp2.add(new JLabel("회원가입이 완료되었습니다."));
+	
+			JDialog wm2 = new JDialog();
+			wm2.setTitle("가입완료");
+			wm2.add(wmp2);
+			wm2.setSize(200, 100);
+			wm2.setLocation(500, 500);
+			wm2.setModal(true);
+			wm2.setVisible(true);
+		
+		
+		}else{
+			JPanel wmp2 = new JPanel();
+			wmp2.add(new JLabel("ID가 중복됩니다.."));
+
+			JDialog wm2 = new JDialog();
+			wm2.setTitle("ID 중복");
+			wm2.add(wmp2);
+			wm2.setSize(200, 100);
+			wm2.setLocation(500, 500);
+			wm2.setModal(true);
+			wm2.setVisible(true);
+		
+		}
+	}
 }					

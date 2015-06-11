@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.swing.*;
 
@@ -119,11 +121,45 @@ public class MainPage extends CenterPanel{
 						signp.add(jp);
 					}
 				}
+				
 				signb.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e){
+						System.out.println(10);
+						String ID = signt[0].getText();
+						String PW = signt[1].getText();
+						String username = signt[2].getText();
+						String userbirt = (String)birtbox[0].getSelectedItem()+birtbox[1].getSelectedItem()+birtbox[2].getSelectedItem();
+						String power = signt[4].getText();
+						String mail;
 						
+						if(ID.equals("")||PW.equals("")||username.equals("")||userbirt.equals("")){
+							JPanel wmp = new JPanel();
+							wmp.add(new JLabel("잘못된 항목이 있습니다."));
+							System.out.println("wm");
+							JDialog wm = new JDialog();
+							wm.setTitle("잘못된 입력");
+							wm.add(wmp);
+							wm.setSize(200, 100);
+							wm.setLocation(500, 500);
+							wm.setModal(true);
+							wm.setVisible(true);
+						}else{
+							
+							mail = "/sign "+ID+" "+PW+" "+username+" "+userbirt+" "+power;
+							try {
+								System.out.println(mail);
+								oos.writeObject(mail);
+								oos.flush();
+								
+								
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 					}
 				});
+				
 				
 				JDialog sign = new JDialog();
 				sign.setTitle("회원 가입");

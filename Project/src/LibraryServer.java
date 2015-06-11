@@ -183,6 +183,57 @@ class ChatThread extends Thread{
 		
 	}
 	public void sign(ObjectOutputStream oos, String line){
+		String ID;
+		String PW;
+		String username;
+		int userbirt;
+		String power;
+		String[] list = {};
 		
+		int[] set = new int[5];
+		
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = line.indexOf(" ")+ 1;
+			}else{
+				set[i] = line.indexOf(" ",set[i-1])+1;
+			}
+			
+		}
+		ID = line.substring(set[0], set[1]-1);
+		PW = line.substring(set[1]+1, set[2]-1);
+		username =line.substring(set[2]+1, set[3]-1);
+		userbirt = Integer.parseInt(line.substring(set[3]+1, set[4]-1));
+		power = line.substring(set[4]+1);
+		
+		boolean idcheck = false;
+		for(int i = 0 ; i < user.size() ; i += 1){
+			if(user.get(i).getID().equals(username)){
+				idcheck = true;
+				break;
+			}
+		}
+		if(idcheck == false){
+			user.add(new User(ID,PW,username,userbirt,list,power));
+			System.out.println(user.get(0).getname()+"가입");
+			try {
+				oos.writeObject("/sign com"); //ID 중복되지 않음, 가입 승인
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		
+			dm.SaveUser();
+			dm.OpenUser();
+		}else{
+			try {
+				oos.writeObject("/sign idw"); // ID 중복됨, 가입 불가.
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }				

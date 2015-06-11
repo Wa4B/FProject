@@ -1,5 +1,7 @@
 package page;
 import java.awt.event.ActionListener;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import javax.swing.*;
 
 public class CenterPanel implements Serializable{
 	protected String name;
+	protected ObjectOutputStream oos;
+	protected ObjectInputStream ois;
 	protected Socket sock;
 	protected JPanel jp;
 	protected ActionListener[] buttonaction;
@@ -34,10 +38,15 @@ public class CenterPanel implements Serializable{
 		return jp;
 	}
 	
-	public void setSocket (Socket sock){
-		this.sock =sock;
+	public void setOos (ObjectOutputStream oos){
+		this.oos= oos;
 	}
-	
+	public void setOis (ObjectInputStream ois){
+		this.ois= ois;
+	}
+	public void setSock(Socket sock){
+		this.sock = sock;
+	}
 	public String getName(){
 		return name;
 	}
