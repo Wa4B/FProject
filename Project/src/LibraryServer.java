@@ -98,11 +98,11 @@ class ChatThread extends Thread{
 			id = (String)ois.readObject();
 			
 			libname = id;
-			broadcast(strtime+" "+id + "님이 접속하였습니다.");	
+			//broadcast(strtime+" "+id + "님이 접속하였습니다.");	
 			System.out.println("접속한 사용자의 아이디는 " + id + "입니다.");	
 			
-			oos.writeObject(cplist.get(0));
-			oos.flush();
+			
+			sandPanel(oos,"MainPage");
 			
 			initFlag = true;	
 		}catch(Exception ex){		
@@ -114,21 +114,28 @@ class ChatThread extends Thread{
 			long time = System.currentTimeMillis();
 			SimpleDateFormat dtime = new SimpleDateFormat("[hh시 mm분 ss초]");
 			String strtime= dtime.format(new Date(time));
-			String line = null;	
-			while((line = ois.readLine()) != null){		
-				if(line.equals("/quit"))	
-					break;
-				if(line.indexOf("/to ") == 0){	
-					sendmsg(line);
-				}if(line.equals("/list")){
-						
+			Object ob = null;	
+			while((ob = ois.readObject()) != null){	
+				if(ob instanceof String){
+					String line = (String)ob;
+					
+					if(line.indexOf("/login") == 0){
+						login(oos,line);
+					}
+					if(line.indexOf("/to ") == 0){	
+						sendmsg(line);
+					}if(line.equals("/list")){
+							
+					}
 				}
+				
+				
 			}		
 		}catch(Exception ex){			
 			System.out.println(ex);		
 		}finally{			
 			
-			broadcast(id + " 님이 접속 종료하였습니다.");		
+			//broadcast(id + " 님이 접속 종료하였습니다.");		
 			try{		
 				if(sock != null)	
 					sock.close();
@@ -145,11 +152,28 @@ class ChatThread extends Thread{
 			
 		}		
 	} // sendmsg			
-	public void broadcast(String msg){			
-		
-	} // broadcast		
 	
-	public void sandPanel(String name){
+	
+	public void sandPanel(ObjectOutputStream oos, String name){
+		
+		try {
+			int indexnum = 0;
+			for(int i = 0; i< cplist.size(); i+=1){
+				if(cplist.get(i).getName().equals(name)){
+					indexnum = i;
+					break;
+				}
+			}
+			oos.writeObject(cplist.get(indexnum));
+			oos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void login(ObjectOutputStream oos, String line){
 		
 	}
 }				
