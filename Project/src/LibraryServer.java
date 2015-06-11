@@ -28,11 +28,19 @@ public class LibraryServer {
 		try{		
 			ServerSocket server = new ServerSocket(10001);	
 			System.out.println("접속을 기다립니다.");	
-			HashMap hm = new HashMap();
+			
+			
+			ArrayList<Book> book = new ArrayList<Book>();
+			ArrayList<User> user = new ArrayList<User>();	
+			ArrayList<Library> library = new ArrayList<Library>();	
+			ArrayList<CenterPanel> cplist = new ArrayList<CenterPanel>();	
+			
+			DataManager dm = new DataManager(book,user,library,cplist);
+			
 			
 			while(true){	
 				Socket sock = server.accept();
-				ChatThread chatthread = new ChatThread(sock, hm);
+				ChatThread chatthread = new ChatThread(sock, dm);
 				chatthread.start();
 				
 			} // while	
@@ -50,7 +58,7 @@ class ChatThread extends Thread{
 	private Socket sock;		
 	private String id;		
 	private BufferedReader br;		
-	private HashMap hm;		
+
 	private DataManager dm;
 	private boolean initFlag = false;	
 	
@@ -59,27 +67,39 @@ class ChatThread extends Thread{
 	private ArrayList<Library> library;	
 	private ArrayList<CenterPanel> cplist;	
 	
-	public ChatThread(Socket sock, HashMap hm){	
+	private String libname ;
+	
+	
+	public ChatThread(Socket sock, DataManager dm){	
 		
 		this.sock = sock;	
-		this.hm = hm;	
-		this.dm = new DataManager(book,user,library,cplist);
+		this.dm = dm;
+		this.book = dm.getbook();
+		this.user = dm.getuser();
+		this.library = dm.getlibrary();
+		this.cplist = dm.getcplist();
+		
+		
 		
 		try{	
 			long time = System.currentTimeMillis();
 			SimpleDateFormat dtime = new SimpleDateFormat("[hh시 mm분 ss초]");
 			String strtime= dtime.format(new Date(time));
 			
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));	
-			br = new BufferedReader(new InputStreamReader(sock.getInputStream()));	
 			
 			
-			id = br.readLine();	
+			ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
+			
+			id = (String)ois.readObject();
+			
+			libname = id;
 			broadcast(strtime+" "+id + "님이 접속하였습니다.");	
 			System.out.println("접속한 사용자의 아이디는 " + id + "입니다.");	
-			synchronized(hm){	
-				hm.put(this.id, pw);
-			}	
+			
+			oos.writeObject(cplist.get(0));
+			oos.flush();
+			
 			initFlag = true;	
 		}catch(Exception ex){		
 			System.out.println(ex);	
@@ -97,31 +117,13 @@ class ChatThread extends Thread{
 				if(line.indexOf("/to ") == 0){	
 					sendmsg(line);
 				}if(line.equals("/list")){
-					synchronized(hm){		
-						Collection collection = hm.keySet();	
-						Iterator iter = collection.iterator();	
-						String list = "/list [서버] 현제 접속\n";
-						while(iter.hasNext()){	
-							list += iter.next()+"\n";
-							
-							
-						}	
-						Object obj = hm.get(id);		
-						if(obj != null){		
-							PrintWriter pw = (PrintWriter)obj;	
-							pw.println(list);	
-							pw.flush();	
-						} // if	
 						
-					}		
 				}
 			}		
 		}catch(Exception ex){			
 			System.out.println(ex);		
 		}finally{			
-			synchronized(hm){		
-				hm.remove(id);	
-			}		
+			
 			broadcast(id + " 님이 접속 종료하였습니다.");		
 			try{		
 				if(sock != null)	
@@ -135,26 +137,15 @@ class ChatThread extends Thread{
 		if(end != -1){			
 			String to = msg.substring(start, end);		
 			String msg2 = msg.substring(end+1);		
-			Object obj = hm.get(to);		
-			if(obj != null){		
-				PrintWriter pw = (PrintWriter)obj;	
-				pw.println(id + " 님이 다음의 귓속말을 보내셨습니다. :" + msg2);	
-				pw.flush();	
-			} // if	
+			
+			
 		}		
 	} // sendmsg			
 	public void broadcast(String msg){			
-		synchronized(hm){		
-			Collection collection = hm.values();	
-			Iterator iter = collection.iterator();	
-			while(iter.hasNext()){	
-				PrintWriter pw = (PrintWriter)iter.next();
-				pw.println(msg);
-				pw.flush();
-				
-			}	
-		}		
+		
 	} // broadcast		
 	
-	
+	public void sandPanel(String name){
+		
+	}
 }				

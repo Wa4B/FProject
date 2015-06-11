@@ -9,18 +9,25 @@ import java.util.ArrayList;
 
 public class DataManager {
 	
-	private ArrayList<Book> book;
-	private ArrayList<User> user;	
-	private ArrayList<Library> library;	
-	private ArrayList<CenterPanel> cplist;	
+	private ArrayList<Book> book = new ArrayList<Book>();
+	private ArrayList<User> user = new ArrayList<User>();	
+	private ArrayList<Library> library = new ArrayList<Library>();	
+	private ArrayList<CenterPanel> cplist = new ArrayList<CenterPanel>();	
+	
+	public static void main(String arg[]){
+		DataManager dm = new DataManager();
+		dm.Allsave();
+	}
+	
 	DataManager(ArrayList<Book> book,ArrayList<User> user,ArrayList<Library> library,ArrayList<CenterPanel> cplist){
 		this.book = book;
 		this.user = user;
 		this.library = library;
 		this.cplist = cplist;
+		Allopen();
 	}
 	DataManager(){
-		Allopen();
+		
 	}
 	
 	ArrayList<Book> getbook(){
@@ -32,7 +39,9 @@ public class DataManager {
 	ArrayList<Library> getlibrary(){
 		return library;
 	}
-	
+	ArrayList<CenterPanel> getcplist(){
+		return cplist;
+	}
 	
 	public void Allopen(){
 		OpenUser();
@@ -44,6 +53,7 @@ public class DataManager {
 		SaveUser();
 		SaveBook();
 		SaveLibrary();
+		
 	}
 	
 	public void OpenUser(){
@@ -67,6 +77,7 @@ public class DataManager {
 			System.out.println("user.dat open.");
 			
 		}catch(Exception ex){
+			System.out.println(ex);
 		}finally{
 			try{
 				ois.close();
@@ -249,4 +260,6 @@ public class DataManager {
 			}catch(IOException ioe){}
 		} // finally
 	}
+	
+
 }

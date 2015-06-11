@@ -1,23 +1,29 @@
 import java.io.Serializable;
+import java.net.Socket;
 
 import javax.swing.JPanel;
 
 
-public class CenterPanel implements Serializable{
-	private JPanel jp;
-	private String name;
+public class CenterPanel extends JPanel implements Serializable{
 	
-	CenterPanel(JPanel jp, String name){
-		this.jp = jp;
+	private String name;
+	private Socket sock;
+	
+	CenterPanel(String name){
+		
 		this.name = name;
 		
 	}
 	
-	JPanel getPanel(){
-		return jp;
+	public void setName(String name){
+		this.name = name;
 	}
 	
-	String getString(){
+	void setSocket (Socket sock){
+		this.sock =sock;
+	}
+	
+	public String getName(){
 		return name;
 	}
 }

@@ -1,10 +1,12 @@
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 
 public class PanelMaker {
@@ -17,14 +19,30 @@ public class PanelMaker {
 		pm.start();
 	}
 	public void start(){
-		pan1();
+		mainpage();
 		SaveUser();
 	}
 	
-	public void pan1(){
-		JPanel jp = new JPanel();
+	public void mainpage(){
+		CenterPanel jp = new CenterPanel("mainpage");
+		JFrame jf = new JFrame();
+		
 		jp.setBackground(Color.PINK);
-		jplist.add(new CenterPanel(jp,"pan1"));
+		
+		JButton bt = new JButton("¹öÆ°");
+		bt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				JFrame jf2 = new JFrame();
+				jf2.setVisible(true);
+				
+			}
+		});
+		jp.add(bt);
+		jf.add(jp);
+		jf.setVisible(true);
+		jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
+		
+		jplist.add(jp);
 		
 	}
 	
