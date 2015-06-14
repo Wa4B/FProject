@@ -167,9 +167,12 @@ class ChatThread extends Thread{
 			for(int i = 0; i< cplist.size(); i+=1){
 				if(cplist.get(i).getName().equals(name)){
 					indexnum = i;
+					
 					break;
 				}
 			}
+			
+			
 			oos.writeObject(cplist.get(indexnum));
 			oos.flush();
 		} catch (IOException e) {

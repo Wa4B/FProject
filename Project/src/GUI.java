@@ -34,9 +34,10 @@ class MainFrame extends JFrame{
 	MainFrame(){
 		this.setVisible(true);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-		this.setSize(500, 400);
-		this.setLocation(500, 500);
+		this.setSize(900, 800);
+		this.setLocation(500, 200);
 		this.setLayout(new GridLayout(1,1));
+		this.setResizable(false);
 		
 		this.add(this.inbox);
 		this.inbox.setLayout(new BorderLayout());

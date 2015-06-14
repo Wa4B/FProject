@@ -14,14 +14,24 @@ public class CenterPanel implements Serializable{
 	protected ObjectOutputStream oos;
 	protected ObjectInputStream ois;
 	protected Socket sock;
-	protected JPanel jp;
+	protected JPanel jp = new JPanel();
 	protected ActionListener[] buttonaction;
 	protected JButton[] abutton;
 	
-	
+	public CenterPanel(String name){
+		this.name = name;
+	}
+	public CenterPanel(){
+		
+		
+		
+	}
 	
 	public void setName(String name){
 		this.name = name;
+	}
+	public void setPanel(){
+		
 	}
 	public void setPanel(JPanel jp){
 		this.jp= jp;

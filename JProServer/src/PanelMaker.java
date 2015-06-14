@@ -27,8 +27,11 @@ public class PanelMaker {
 	}
 	
 	public void mainpage(){
-		
-		jplist.add(new MainPage());
+	
+		MainPage mp = new MainPage();
+		mp.setName("MainPage");
+
+		jplist.add(mp);
 				
 	}
 	

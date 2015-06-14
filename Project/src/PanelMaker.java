@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import page.CenterPanel;
+import page.HomePage;
 import page.MainPage;
 
 
@@ -27,9 +28,13 @@ public class PanelMaker {
 	}
 	
 	public void mainpage(){
+		MainPage mp = new MainPage("MainPage");
+		mp.titlelogo = new ImageIcon("img/logo2.JPG");
+		HomePage hp = new HomePage("HomePage");
+		hp.logoimg = new ImageIcon("img/logo3.JPG");
 		
-		jplist.add(new MainPage());
-				
+		jplist.add(mp);
+		jplist.add(hp);
 	}
 	
 	public void SaveUser(){
@@ -49,6 +54,7 @@ public class PanelMaker {
 			oos.writeObject(jplist);
 			oos.reset();
 			
+			oos.flush();
 			System.out.println("jplist.dat save.");
 			
 		}catch(Exception ex){

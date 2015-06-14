@@ -18,6 +18,7 @@ import java.io.ObjectInputStream;
 import javax.swing.JFrame;
 
 import page.CenterPanel;
+import page.MainPage;
 
 
 public class LibraryServer {
@@ -65,7 +66,7 @@ class ChatThread extends Thread{
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private Socket sock;		
-	private String id;		
+		
 	private BufferedReader br;		
 
 	private DataManager dm;
@@ -77,6 +78,9 @@ class ChatThread extends Thread{
 	private ArrayList<CenterPanel> cplist;	
 	
 	private String libname ;
+	private String ID;
+	private String PW;
+	private String power;
 	
 	
 	public ChatThread(Socket sock, DataManager dm){	
@@ -87,6 +91,7 @@ class ChatThread extends Thread{
 		this.user = dm.getuser();
 		this.library = dm.getlibrary();
 		this.cplist = dm.getcplist();
+		
 		
 		
 		
@@ -101,11 +106,10 @@ class ChatThread extends Thread{
 			ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
 			this.oos = oos;
 			this.ois = ois;
-			id = (String)ois.readObject();
-			
-			libname = id;
+			libname = (String)ois.readObject();
+
 			//broadcast(strtime+" "+id + "님이 접속하였습니다.");	
-			System.out.println("접속한 사용자의 아이디는 " + id + "입니다.");	
+			System.out.println(libname + "에서 접속");	
 			
 			
 			sandPanel(oos,"MainPage");
@@ -170,6 +174,7 @@ class ChatThread extends Thread{
 					break;
 				}
 			}
+			//oos.writeObject(cplist.get(indexnum));
 			oos.writeObject(cplist.get(indexnum));
 			oos.flush();
 		} catch (IOException e) {
@@ -180,6 +185,41 @@ class ChatThread extends Thread{
 	}
 	
 	public void login(ObjectOutputStream oos, String line){
+		String id;
+		String pw;
+		int[] set = new int[2];
+		int userindex = -1;
+		
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = line.indexOf(" ");
+			}else{
+				set[i] = line.indexOf(" ",set[i-1]+1);
+			}
+		}
+		id = line.substring(set[0], set[1]);
+		pw = line.substring(set[1]+1);
+		
+		for(int i = 0 ; i < user.size() ; i+= 1){
+			if(user.get(i).getID().equals(id)){
+				userindex = i;
+				break;
+			}
+		}
+		if(userindex == -1||!user.get(userindex).getPW().equals(pw)){
+			try {
+				oos.writeObject("/popup 로그인오류/ID 또는 비밀번호가 틀렸습니다.");
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}// catch
+		}else{
+			this.ID = id;
+			this.PW =pw;
+			this.power = user.get(userindex).getpow();
+			sandPanel(oos,"HomePage");
+		}
 		
 	}
 	public void sign(ObjectOutputStream oos, String line){
@@ -194,28 +234,35 @@ class ChatThread extends Thread{
 		
 		for(int i = 0 ; i< set.length ; i += 1){
 			if(i == 0){
-				set[0] = line.indexOf(" ")+ 1;
+				set[0] = line.indexOf(" ");
 			}else{
-				set[i] = line.indexOf(" ",set[i-1])+1;
+				set[i] = line.indexOf(" ",set[i-1]+1);
 			}
-			
 		}
-		ID = line.substring(set[0], set[1]-1);
-		PW = line.substring(set[1]+1, set[2]-1);
-		username =line.substring(set[2]+1, set[3]-1);
-		userbirt = Integer.parseInt(line.substring(set[3]+1, set[4]-1));
-		power = line.substring(set[4]+1);
 		
+		ID = line.substring(set[0], set[1]);
+		PW = line.substring(set[1]+1, set[2]);
+		username =line.substring(set[2]+1, set[3]);
+		userbirt = Integer.parseInt(line.substring(set[3]+1, set[4]));
+		if(set[4] != line.length()-1){
+			power = line.substring(set[4]+1);
+		}else{
+			power = "null";
+		}
 		boolean idcheck = false;
-		for(int i = 0 ; i < user.size() ; i += 1){
-			if(user.get(i).getID().equals(username)){
-				idcheck = true;
-				break;
+		if(user.size() !=0){
+			for(int i = 0 ; i < user.size() ; i += 1){
+				if(user.get(i).getID().equals(ID)){
+					System.out.println(user.get(i).getID());
+					idcheck = true;
+					break;
+				}
 			}
 		}
+		System.out.println(idcheck);
 		if(idcheck == false){
 			user.add(new User(ID,PW,username,userbirt,list,power));
-			System.out.println(user.get(0).getname()+"가입");
+			System.out.println(user.get(0).getID()+"가입");
 			try {
 				oos.writeObject("/sign com"); //ID 중복되지 않음, 가입 승인
 				oos.flush();

@@ -98,10 +98,13 @@ class InputThread extends Thread{
 			Object ob = null;		
 			while((ob = ois.readObject()) != null){		
 				if(ob instanceof CenterPanel){
+					System.out.println("1");
 					CenterPanel cp = (CenterPanel)ob;
+					System.out.println("2");
 					cp.setOos(oos);
 					cp.setOis(ois);
 					cp.setSock(sock);
+					cp.setPanel();
 					gui.setCenter(cp);
 					System.out.println(cp.getName());
 				}

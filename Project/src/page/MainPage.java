@@ -1,58 +1,120 @@
 package page;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 
 import javax.swing.*;
 
-public class MainPage extends CenterPanel{
+public class MainPage extends CenterPanel  implements Serializable{
 	
 	private JButton[] loginbt = new JButton[2];
 	private JTextField[] login = new JTextField[2];
-
+	public ImageIcon titlelogo;
+	
+	public MainPage(String name){
+		super(name);
+		
+	}
+	public static void main(String arg[]){
+		JFrame jf = new JFrame();
+		jf.setVisible(true);
+		jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
+		jf.setSize(900, 800);
+		jf.setLocation(500, 200);
+		jf.setLayout(new GridLayout(1,1));
+		jf.setResizable(false);
+		
+		MainPage mp = new MainPage();
+		mp.setPanel();
+		mp.setAction();
+		jf.add(mp.getPanel());
+		
+		
+	}
+	
 	public MainPage(){
+		
+	}
+	
+	
+	public void setPanel(){
 		this.name = "MainPage";
 		
+		
 		jp = new JPanel();
-		
-		
-		jp.setBackground(Color.WHITE);
-		jp.setLayout(new GridLayout(4,1,0,0));
-		
-		JLabel title = new JLabel("도서관 종합 프로그램");
-		
 
+		jp.setBackground(Color.WHITE);
+		jp.setLayout(null);
+		
+		
+		JLabel title = new JLabel(titlelogo);
 		jp.add(title);
+		title.setLocation(450-titlelogo.getIconWidth()/2, 50);
+		title.setSize(titlelogo.getIconWidth(),titlelogo.getIconHeight());
 		
+		JPanel logp = new JPanel();
+		jp.add(logp);
+		logp.setBackground(Color.white);
+		logp.setSize(300, 100);
+		logp.setLocation(450 - logp.getWidth()/2, 350);
+		logp.setLayout(new GridLayout(3,1,0,0));
+		
+		loginbt[0] = new JButton("로그인");
+		loginbt[1] = new JButton("회원가입");
 		String[] logtx = {"ID","PW"};
-		
+
 		for(int i = 0; i < 2; i +=1){
 			JPanel lbox = new JPanel();
 			lbox.setLayout(new GridLayout(1,2));
 			JLabel jl = new JLabel(logtx[i]);
-			login[i] = new JTextField();
+			jl.setHorizontalAlignment(jl.CENTER);
 			lbox.add(jl);
+			login[i] = new JTextField();
 			lbox.add(login[i]);
-			jp.add(lbox);
+
+			logp.add(lbox);
 		}
-		loginbt[0] = new JButton("로그인");
-		loginbt[1] = new JButton("회원가입");
+		
 		JPanel lbbox = new JPanel(new GridLayout(1,2));
 		lbbox.add(loginbt[0]);
 		lbbox.add(loginbt[1]);
-		jp.add(lbbox);
+		logp.add(lbbox);
+		logp.updateUI();
 		
-		this.jp = jp;
+		
 	}
 	
 	public void setAction(){
 		loginbt[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				System.out.println(2);
+				if(login[0].getText().equals("")||login[1].getText().equals("")){
+					JDialog wm = new JDialog();
+					wm.setTitle("입력 오류");
+					JLabel text = new JLabel("입력오류, 제대로 입력해 주세요.");
+					wm.add(text);
+					wm.setSize(200, 100);
+					wm.setLocation(500, 500);
+					wm.setResizable(false);
+					wm.setModal(true);
+					wm.setVisible(true);
+				}else{
+					String logtext ="/login " + login[0].getText()+" "+login[1].getText();
+					System.out.println(logtext);
+					try {
+						oos.writeObject(logtext);
+						oos.flush();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 		});
 		loginbt[1].addActionListener(new ActionListener() {
@@ -63,6 +125,7 @@ public class MainPage extends CenterPanel{
 				JButton signb = new JButton("회원가입");
 				JTextField[] signt = new JTextField[6];
 				JPanel signp = new JPanel(new GridLayout(6,1));
+				signp.setBackground(Color.WHITE);
 				JComboBox[] birtbox = new JComboBox[3];
 				
 				for(int i = 0 ; i < 6 ; i +=1){
@@ -132,7 +195,9 @@ public class MainPage extends CenterPanel{
 						String power = signt[4].getText();
 						String mail;
 						
-						if(ID.equals("")||PW.equals("")||username.equals("")||userbirt.equals("")){
+						String allstr = ID+PW+username+userbirt+power;
+						
+						if(ID.equals("")||PW.equals("")||username.equals("")||userbirt.equals("")||allstr.indexOf(" ")!= -1){
 							JPanel wmp = new JPanel();
 							wmp.add(new JLabel("잘못된 항목이 있습니다."));
 							System.out.println("wm");
@@ -170,5 +235,6 @@ public class MainPage extends CenterPanel{
 				
 			}
 		});
+		
 	}
 }

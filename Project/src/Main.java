@@ -16,16 +16,13 @@ import page.CenterPanel;
 
 public class Main {
 	
-	private ArrayList<Book> book;
-	private ArrayList<User> user;
-	private ArrayList<Library> library;
 	
 	
 	public static void main(String[] args){
 		
 		
-		String arg[] = {"상록도서관","PC01","192.168.123.100"};//도서관 이름,PC번호,ip주소
-		if(arg.length != 3){	
+		String arg[] = {"상록도서관","192.168.123.100"};//도서관 이름,PC번호,ip주소
+		if(arg.length != 2){	
 			System.out.println("사용법 : java ChatClient id 접속할서버ip");
 			System.exit(1);
 		}	
@@ -39,14 +36,14 @@ public class Main {
 		ObjectInputStream ois = null;
 		boolean endflag = false;	
 		try{	
-			sock = new Socket(arg[2], 10001);	
+			sock = new Socket(arg[1], 10001);	
 			// 사용자의 id를 전송한다.		
 				
 			
 			oos = new ObjectOutputStream(sock.getOutputStream());
 			ois = new ObjectInputStream(sock.getInputStream());
 			
-			Object ob = arg[1];
+			Object ob = arg[0];
 			oos.writeObject(ob);
 			oos.flush();
 			
@@ -102,6 +99,7 @@ class InputThread extends Thread{
 					cp.setOos(oos);
 					cp.setOis(ois);
 					cp.setSock(sock);
+					cp.setPanel();
 					gui.setCenter(cp);
 					System.out.println(cp.getName());
 				}
@@ -110,6 +108,9 @@ class InputThread extends Thread{
 					String str = (String)ob;
 					if(str.indexOf("/sign")==0){
 						sign(str);
+					}
+					if(str.indexOf("/pop")==0){
+						popup(str);
 					}
 				}
 				
@@ -127,7 +128,7 @@ class InputThread extends Thread{
 		}			
 	} // InputThread	
 	public void sign(String line){
-		String res = line.substring(7);
+		String res = line.substring(6);
 		
 		if(res.equals("com")){
 			JPanel wmp2 = new JPanel();
@@ -155,5 +156,21 @@ class InputThread extends Thread{
 			wm2.setVisible(true);
 		
 		}
+	}
+	public void popup(String line){
+		String pop = line.substring(7);
+		int index = pop.indexOf(" ");
+		String title = pop.substring(0,index);
+		String str = pop.substring(index+1);
+		JPanel wmp2 = new JPanel();
+		wmp2.add(new JLabel(str));
+
+		JDialog wm2 = new JDialog();
+		wm2.setTitle(title);
+		wm2.add(wmp2);
+		wm2.setSize(200, 100);
+		wm2.setLocation(500, 500);
+		wm2.setModal(true);
+		wm2.setVisible(true);
 	}
 }					
