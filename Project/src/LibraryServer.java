@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
 
 
 public class LibraryServer {
@@ -161,21 +162,21 @@ class ChatThread extends Thread{
 	
 	public void home(ObjectOutputStream oos, String line){
 		String str = line.substring(6);
-		System.out.println("dzs");
+		
 		if(str.indexOf("getdata")==0){
 			int num = Integer.parseInt(str.substring(8));
 			
 			
-			String data[][] = new String[20][4];
-			for(int i = 0; i < 20; i+=1){
+			String data[][] = new String[book.size()][4];
+			for(int i = 0; i < book.size(); i+=1){
 				if(book.size() < i){
 					break;
 				}else{
 					
-					data[i][0] = book.get(num*20 + i).getisbn();
-					data[i][1] = book.get(num*20 + i).gettitle();
-					data[i][2] = book.get(num*20 + i).getauthor();
-					data[i][3] = book.get(num*20 + i).getcom();
+					data[i][0] = book.get(i).getisbn();
+					data[i][1] = book.get(i).gettitle();
+					data[i][2] = book.get(i).getauthor();
+					data[i][3] = book.get(i).getcom();
 					
 				}
 			}
@@ -187,6 +188,69 @@ class ChatThread extends Thread{
 				e.printStackTrace();
 			}
 			
+		}
+		if(str.indexOf("scdata")==0){
+			
+			String scf = str.substring(7,str.indexOf("/",7));
+			String sct = str.substring(str.indexOf("/", 7)+1);
+			System.out.println(scf+"/"+sct);
+			String data[][] = new String[book.size()][4];
+			for(int i = 0; i < book.size(); i+=1){
+				if(book.size() < i){
+					break;
+				}else{
+					
+					data[i][0] = book.get(i).getisbn();
+					data[i][1] = book.get(i).gettitle();
+					data[i][2] = book.get(i).getauthor();
+					data[i][3] = book.get(i).getcom();
+					
+				}
+			}
+			ArrayList<String[]>cbook = new ArrayList<String[]>();
+			for(int i = 0 ; i < data.length ; i += 1)
+        	{
+        		
+        		if(data[i][1].indexOf(sct)!= -1&&(scf.equals("전체")||scf.equals("제목")))
+        		{
+        			cbook.add(data[i]);
+        			continue;
+        		}else if(data[i][2].indexOf(sct)!= -1&&(scf.equals("전체")||scf.equals("저자")))
+        		{
+        			cbook.add(data[i]);
+        			continue;
+        		}else if(data[i][3].indexOf(sct)!= -1&&(scf.equals("전체")||scf.equals("출판사")))
+        		{
+        			cbook.add(data[i]);
+        			continue;
+        		}
+        		
+        		
+        	}
+			if(cbook.size() == 0){
+				try {
+					oos.writeObject("/popup 검색/해당하는 항목이 없습니다.");
+					oos.flush();
+					oos.writeObject(data);
+					oos.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}// catch
+			}
+        	if(cbook.size() > 0){
+        		String data2[][] = new String[cbook.size()][4];
+        		for(int i = 0 ; i < cbook.size() ; i+= 1){
+        			data2[i] = cbook.get(i);
+        		}
+        		try {
+					oos.writeObject(data2);
+					oos.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
 		}
 	}
 	

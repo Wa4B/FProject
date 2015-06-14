@@ -54,10 +54,12 @@ public class Booklistmaker {
 				}
 				if(n < 10){
 					isbn = "a000"+n;
-				}else if(n < 1000){
+				}else if(n < 100){
 					isbn = "a00"+n;
-				}else if(n < 10000){
+				}else if(n < 1000){
 					isbn = "a0"+n;
+				}else if(n < 10000){
+					isbn = "a" + n;
 				}
 				
 				book.add(new Book(isbn,title,Author,price,years[(int)(Math.random()*15)],com));

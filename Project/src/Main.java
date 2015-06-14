@@ -114,7 +114,7 @@ class InputThread extends Thread{
 				if(ob instanceof String[][]){
 					String[][] data = (String[][])ob;
 					gui.setData(data);
-					
+					System.out.println("dd");
 				}
 				
 			}		
