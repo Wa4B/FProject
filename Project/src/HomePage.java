@@ -1,16 +1,18 @@
-package page;
+
 
 import java.io.Serializable;
+
 import javax.swing.*;
+
 import java.awt.*;
+
 import javax.swing.event.*;
 
 
 public class HomePage  extends CenterPanel  implements Serializable{
 		
 	public ImageIcon logoimg;
-	public String username;
-	public String libname;
+	
 	
 	
 	public HomePage(String name){
@@ -30,6 +32,10 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		logo.setLocation(50,0);
 		logo.setSize(logoimg.getIconWidth(),logoimg.getIconHeight());
 		
+		JLabel hellolb = new JLabel(username+"¥‘ æ»≥Á«œººø‰.");
+		jp.add(hellolb);
+		hellolb.setSize(300, 50);
+		hellolb.setLocation(50,200);
 		
 		
 	}

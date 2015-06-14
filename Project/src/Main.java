@@ -11,8 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import page.CenterPanel;
-
 
 public class Main {
 	
@@ -159,7 +157,7 @@ class InputThread extends Thread{
 	}
 	public void popup(String line){
 		String pop = line.substring(7);
-		int index = pop.indexOf(" ");
+		int index = pop.indexOf("/");
 		String title = pop.substring(0,index);
 		String str = pop.substring(index+1);
 		JPanel wmp2 = new JPanel();

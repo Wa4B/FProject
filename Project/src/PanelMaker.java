@@ -8,10 +8,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import page.CenterPanel;
-import page.HomePage;
-import page.MainPage;
-
 
 public class PanelMaker {
 	
@@ -35,6 +31,7 @@ public class PanelMaker {
 		
 		jplist.add(mp);
 		jplist.add(hp);
+		
 	}
 	
 	public void SaveUser(){
@@ -46,6 +43,7 @@ public class PanelMaker {
 		
 		 
 		try{
+			
 			fout = new FileOutputStream("jplist.dat");
 			oos = new ObjectOutputStream(fout);
 			

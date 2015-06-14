@@ -1,4 +1,4 @@
-package page;
+
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +17,9 @@ public class CenterPanel implements Serializable{
 	protected JPanel jp = new JPanel();
 	protected ActionListener[] buttonaction;
 	protected JButton[] abutton;
+	
+	public String username;
+	public String libname;
 	
 	public CenterPanel(String name){
 		this.name = name;

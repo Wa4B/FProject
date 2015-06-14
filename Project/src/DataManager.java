@@ -7,8 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import page.CenterPanel;
-
 public class DataManager {
 	
 	private ArrayList<Book> book = new ArrayList<Book>();
@@ -234,6 +232,7 @@ public class DataManager {
 			}catch(IOException ioe){}
 		} // finally
 	}
+	
 	public void OpenPanel(){
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
@@ -246,7 +245,7 @@ public class DataManager {
 			cplist.clear();
 			
 			ArrayList list = (ArrayList)ois.readObject();
-			
+		
 			
 			for(int i = 0 ; i < list.size() ; i+=1){
 				cplist.add((CenterPanel)list.get(i));

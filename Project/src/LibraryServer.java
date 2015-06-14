@@ -17,9 +17,6 @@ import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
 
-import page.CenterPanel;
-import page.MainPage;
-
 
 public class LibraryServer {
 	
@@ -80,6 +77,7 @@ class ChatThread extends Thread{
 	private String libname ;
 	private String ID;
 	private String PW;
+	private String username;
 	private String power;
 	
 	
@@ -91,6 +89,7 @@ class ChatThread extends Thread{
 		this.user = dm.getuser();
 		this.library = dm.getlibrary();
 		this.cplist = dm.getcplist();
+		
 		
 		
 		
@@ -167,13 +166,20 @@ class ChatThread extends Thread{
 	public void sandPanel(ObjectOutputStream oos, String name){
 		
 		try {
-			int indexnum = 0;
+			int indexnum = -1;
+			System.out.println(cplist.size());
 			for(int i = 0; i< cplist.size(); i+=1){
 				if(cplist.get(i).getName().equals(name)){
 					indexnum = i;
 					break;
 				}
 			}
+			
+			if(!name.equals("MainPage")){
+				cplist.get(indexnum).libname = libname;
+				cplist.get(indexnum).username = username;
+			}
+			
 			//oos.writeObject(cplist.get(indexnum));
 			oos.writeObject(cplist.get(indexnum));
 			oos.flush();
@@ -197,7 +203,7 @@ class ChatThread extends Thread{
 				set[i] = line.indexOf(" ",set[i-1]+1);
 			}
 		}
-		id = line.substring(set[0], set[1]);
+		id = line.substring(set[0]+1, set[1]);
 		pw = line.substring(set[1]+1);
 		
 		for(int i = 0 ; i < user.size() ; i+= 1){
@@ -217,6 +223,7 @@ class ChatThread extends Thread{
 		}else{
 			this.ID = id;
 			this.PW =pw;
+			this.username = user.get(userindex).getname();
 			this.power = user.get(userindex).getpow();
 			sandPanel(oos,"HomePage");
 		}
@@ -240,7 +247,7 @@ class ChatThread extends Thread{
 			}
 		}
 		
-		ID = line.substring(set[0], set[1]);
+		ID = line.substring(set[0]+1, set[1]);
 		PW = line.substring(set[1]+1, set[2]);
 		username =line.substring(set[2]+1, set[3]);
 		userbirt = Integer.parseInt(line.substring(set[3]+1, set[4]));

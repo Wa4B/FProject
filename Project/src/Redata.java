@@ -3,7 +3,7 @@ public class Redata {
 	public static void main (String arg[]){
 		DataManager dm = new DataManager();
 		
-		dm.Allsave();
+		dm.SaveUser();
 		String line = "a b c ds e";
 		int set[] = new int[4];
 		for(int i = 0 ; i< set.length ; i += 1){
