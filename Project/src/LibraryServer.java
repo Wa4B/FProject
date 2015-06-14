@@ -75,10 +75,7 @@ class ChatThread extends Thread{
 	private ArrayList<CenterPanel> cplist;	
 	
 	private String libname ;
-	private String ID;
-	private String PW;
-	private String username;
-	private String power;
+	private User userinfo;
 	
 	
 	public ChatThread(Socket sock, DataManager dm){	
@@ -133,8 +130,8 @@ class ChatThread extends Thread{
 					}
 					if(line.indexOf("/sign") == 0){	
 						sign(oos,line);
-					}if(line.equals("/list")){
-							
+					}if(line.indexOf("/home")==0){
+						home(oos,line);
 					}
 				}
 				
@@ -162,6 +159,36 @@ class ChatThread extends Thread{
 		}		
 	} // sendmsg			
 	
+	public void home(ObjectOutputStream oos, String line){
+		String str = line.substring(6);
+		System.out.println("dzs");
+		if(str.indexOf("getdata")==0){
+			int num = Integer.parseInt(str.substring(8));
+			
+			
+			String data[][] = new String[20][4];
+			for(int i = 0; i < 20; i+=1){
+				if(book.size() < i){
+					break;
+				}else{
+					
+					data[i][0] = book.get(num*20 + i).getisbn();
+					data[i][1] = book.get(num*20 + i).gettitle();
+					data[i][2] = book.get(num*20 + i).getauthor();
+					data[i][3] = book.get(num*20 + i).getcom();
+					
+				}
+			}
+			try {
+				oos.writeObject(data);
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
 	
 	public void sandPanel(ObjectOutputStream oos, String name){
 		
@@ -176,8 +203,14 @@ class ChatThread extends Thread{
 			}
 			
 			if(!name.equals("MainPage")){
-				cplist.get(indexnum).libname = libname;
-				cplist.get(indexnum).username = username;
+				cplist.get(indexnum).setUser(userinfo);
+			}
+			if(indexnum != -1&&name.equals("HomPage")){
+				String[] bookdat = new String[20];
+				for(int i = 0; i < book.size();i+=1){
+					bookdat[i] = book.get(i).gettitle();
+				}
+				
 			}
 			
 			//oos.writeObject(cplist.get(indexnum));
@@ -221,10 +254,8 @@ class ChatThread extends Thread{
 				e.printStackTrace();
 			}// catch
 		}else{
-			this.ID = id;
-			this.PW =pw;
-			this.username = user.get(userindex).getname();
-			this.power = user.get(userindex).getpow();
+			
+			this.userinfo = user.get(userindex);
 			sandPanel(oos,"HomePage");
 		}
 		

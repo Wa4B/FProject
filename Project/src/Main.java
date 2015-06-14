@@ -111,6 +111,11 @@ class InputThread extends Thread{
 						popup(str);
 					}
 				}
+				if(ob instanceof String[][]){
+					String[][] data = (String[][])ob;
+					gui.setData(data);
+					
+				}
 				
 			}		
 		}catch(Exception ex){			

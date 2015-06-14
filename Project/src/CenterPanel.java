@@ -18,8 +18,8 @@ public class CenterPanel implements Serializable{
 	protected ActionListener[] buttonaction;
 	protected JButton[] abutton;
 	
-	public String username;
-	public String libname;
+	protected User userinfo;
+	protected String data[][] = {};
 	
 	public CenterPanel(String name){
 		this.name = name;
@@ -30,6 +30,16 @@ public class CenterPanel implements Serializable{
 		
 	}
 	
+	public void setdata(String[][] data){
+		this.data = data.clone();
+	}
+	
+	public void updateui(){
+		jp.updateUI();
+	}
+	public void setUser(User userinfo){
+		this.userinfo = userinfo;
+	}
 	public void setName(String name){
 		this.name = name;
 	}

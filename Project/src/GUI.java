@@ -6,13 +6,27 @@ import javax.swing.*;
 
 public class GUI {
 	
+	CenterPanel jp;
+	
 	private MainFrame mf;
 	GUI(){
 		
 		mf =new MainFrame();
 	}
 	public void setCenter(CenterPanel jp){
-		jp.setAction();
+		this.jp = jp;
+		this.jp.setAction();
+		setpanel();
+	}
+	public void setData(String [][] data){
+		jp.setdata(data);
+		jp.setPanel();
+		setpanel();
+		jp.updateui();
+		
+	}
+	public void setpanel(){
+		
 		mf.change(jp.getPanel());
 		mf.setTitle(jp.getName());
 	}

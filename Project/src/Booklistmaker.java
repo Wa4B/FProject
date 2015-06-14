@@ -35,7 +35,7 @@ public class Booklistmaker {
 				int[] set = new int[6];
 				for(int i = 0 ; i < set.length; i+= 1){
 					if(i==0){
-						set[i] = str.indexOf("/")+1;
+						set[i] = str.indexOf("/");
 					}else{
 						set[i] = str.indexOf("/", set[i-1]+1);
 					}
