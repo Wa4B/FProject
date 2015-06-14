@@ -25,6 +25,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
 	protected String[][] data2;
 	protected JButton rantalb = new JButton("대여");
 	protected JButton returnb = new JButton("반납");
+	protected JButton addb = new JButton("추가");
 	protected JButton removeb = new JButton("제거");
 	protected JButton fixb = new JButton("수정");
 	
@@ -56,9 +57,10 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			Container co = new Container();
 			JPanel jlp = new JPanel(new BorderLayout());
 			JPanel scp = new  JPanel(null);
-			JPanel bp = new JPanel(new GridLayout(1,4));
+			JPanel bp = new JPanel(new GridLayout(1,5));
 			bp.add(returnb);
 			bp.add(rantalb);
+			bp.add(addb);
 			bp.add(fixb);
 			bp.add(removeb);
 			
@@ -132,6 +134,10 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		});
 		removeb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	JTextField jtf = new JTextField();
+            	JButton okb = new JButton("확인");
+            	JLabel texts = new JLabel("제거할 도서의 코드를 입력해 주세요.");
+            	
             	
             }
 		});
