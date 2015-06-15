@@ -145,6 +145,14 @@ class ChatThread extends Thread{
 						
 						removebook(oos,line);
 					}
+					if(line.indexOf("/rtbook")==0){
+						
+						rtbook(oos,line);
+					}
+					if(line.equals("/logout")){
+						this.userinfo = null;
+						sandPanel(oos,"MainPage");
+					}
 				}
 				
 				
@@ -162,16 +170,46 @@ class ChatThread extends Thread{
 	} // run
 	
 	
-	public void sendmsg(String msg){				
-		int start = msg.indexOf(" ") +1;			
-		int end = msg.indexOf(" ", start);			
-		if(end != -1){			
-			String to = msg.substring(start, end);		
-			String msg2 = msg.substring(end+1);		
+
+	
+	public void logout(ObjectOutputStream oos){
+		
+		
+		
+	}
+	
+	public void rtbook(ObjectOutputStream oos,String line){
+		String str = line.substring(7);
+		
+		int set[] = new int[2];
+		for(int i = 0 ; i < set.length ; i += 1){
+			if(i == 0){
+				set[i] = str.indexOf(" ");
+			}else{
+				set[i] = str.indexOf(" ", set[i-1]+1);
+			}
+		}
+		String ID = str.substring(0, set[0]);
+		String PW = str.substring(set[0]+1, set[1]);
+		String Isbn = str.substring(set[1]+1);
+		boolean idcheck = false;
+		for(int i = 0 ; i < user.size() ; i += 1){
+			if(user.get(i).getID().equals(ID)){
+				if(user.get(i).getPW().equals(PW)){
+					idcheck = true;
+					break;
+				}else{
+					idcheck= false;
+					break;
+				}
+			}
+		}//idcheck
+		
+		if(idcheck==true){
 			
-			
-		}		
-	} // sendmsg			
+		}
+	}
+	
 	public void fixbook(ObjectOutputStream oos,String line){
 		String str = line.substring(9);
 		int set[] = new int[4];
@@ -332,6 +370,10 @@ class ChatThread extends Thread{
         		{
         			cbook.add(data[i]);
         			continue;
+        		}else if(data[i][0].indexOf(sct)!= -1&&(scf.equals("전체")||scf.equals("코드")))
+        		{
+        			cbook.add(data[i]);
+        			continue;
         		}
         		
         		
@@ -379,13 +421,15 @@ class ChatThread extends Thread{
 				cplist.get(indexnum).setUser(userinfo);
 			}
 			if(indexnum != -1&&name.equals("HomPage")){
+				cplist.get(indexnum).setUser(userinfo);
+				System.out.println(userinfo.getID());
 				String[] bookdat = new String[20];
 				for(int i = 0; i < book.size();i+=1){
 					bookdat[i] = book.get(i).gettitle();
 				}
 				
 			}
-			
+			cplist.get(indexnum).setUser(userinfo);
 			//oos.writeObject(cplist.get(indexnum));
 			oos.writeObject(cplist.get(indexnum));
 			oos.flush();

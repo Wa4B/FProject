@@ -29,6 +29,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
 	protected JButton addb = new JButton("추가");
 	protected JButton removeb = new JButton("제거");
 	protected JButton fixb = new JButton("수정");
+	protected JButton logoutb= new JButton("로그아웃");
 	
 	public HomePage(String name){
 		super(name);
@@ -51,8 +52,11 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		jp.add(hellolb);
 		hellolb.setSize(300, 50);
 		hellolb.setLocation(50,200);
-		
-		
+		/*
+		jp.add(logoutb);
+		logoutb.setSize(100, 50);
+		logoutb.setLocation(50,300);
+		*/
 		if(data.length > 0){
 			
 			JCheckBox jcb = new JCheckBox();
@@ -62,13 +66,15 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			JPanel jlp = new JPanel(new BorderLayout());
 			JPanel scp = new  JPanel(null);
 			JPanel bp = new JPanel(new GridLayout(1,5));
-			bp.add(returnb);
-			bp.add(rantalb);
+			//bp.add(returnb);
+			//bp.add(rantalb);
 			bp.add(fixb);
 			bp.add(removeb);
 			bp.add(addb);
 			
+			
 			jlp.add(bp,BorderLayout.SOUTH);
+			
 			
 			
 			
@@ -88,7 +94,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			jlp.add(new JScrollPane(jt),BorderLayout.CENTER);
 			jp.add(jlp);
 			
-			String ft[] = {"전체","제목","저자","출판사"};
+			String ft[] = {"전체","제목","저자","출판사","코드"};
 			scf = new JComboBox(ft);
 			scp.setPreferredSize(new Dimension(600,20));
 			scp.add(sc);
@@ -190,6 +196,16 @@ public class HomePage  extends CenterPanel  implements Serializable{
             	}else{
             		popup("오류", "수정할 테이블을 고르세요.");
             	}
+            }
+		});
+		logoutb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	try {
+					oos.writeObject("/logout");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
 		});
 	}

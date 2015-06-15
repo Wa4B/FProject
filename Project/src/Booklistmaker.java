@@ -8,10 +8,13 @@ import java.util.ArrayList;
 
 public class Booklistmaker {
 	private ArrayList<Book> book = new ArrayList<Book>();
+	private ArrayList<LibraryBook> libbook = new ArrayList<LibraryBook>();
+	
 	public static void main(String arg[]){
 		Booklistmaker bk = new Booklistmaker();
 		bk.OpenBook();
 		bk.SaveBook();
+		bk.SavelibBook();
 	}
 	public void OpenBook(){
 		BufferedReader br = null;
@@ -73,6 +76,50 @@ public class Booklistmaker {
 	}
 	
 	public void SaveBook(){
+		FileOutputStream fout = null;
+		ObjectOutputStream oos = null;
+		
+		String libname = "상록도서관";
+		int n = 0;
+		String isbn = "a0000";
+		for(int i = 0 ; i < book.size() ; i += 1){
+			if(n < 10){
+				isbn = "a000"+n;
+			}else if(n < 100){
+				isbn = "a00"+n;
+			}else if(n < 1000){
+				isbn = "a0"+n;
+			}else if(n < 10000){
+				isbn = "a" + n;
+			}
+			int rani = (int)Math.random()*2;
+			String[] aaa = {};
+			libbook.add(new LibraryBook(libname,isbn,book.get(i).getisbn(), 2, 0, aaa, 0));
+			n += 1;
+		}
+		
+		 
+		try{
+			fout = new FileOutputStream(libname+"book.dat");
+			oos = new ObjectOutputStream(fout);
+			
+			oos.writeObject(libbook);//파일 입력의 법칙에 따라 두번 한 것임.
+			oos.reset();
+			oos.writeObject(libbook);
+			oos.reset();
+			
+			System.out.println(libname+"book.dat save.");
+			
+		}catch(Exception ex){
+		}finally{
+			try{
+				oos.close();
+				fout.close();
+			}catch(IOException ioe){}
+		} // finally
+	}
+	
+	public void SavelibBook(){
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		
