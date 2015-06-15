@@ -1,3 +1,6 @@
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -7,9 +10,11 @@ import java.util.ArrayList;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 
 public class Main {
@@ -19,7 +24,7 @@ public class Main {
 	public static void main(String[] args){
 		
 		
-		String arg[] = {"상록도서관","192.168.123.100"};//도서관 이름,PC번호,ip주소
+		String arg[] = {"상록도서관","192.168.0.159"};//도서관 이름,PC번호,ip주소
 		if(arg.length != 2){	
 			System.out.println("사용법 : java ChatClient id 접속할서버ip");
 			System.exit(1);
@@ -108,7 +113,7 @@ class InputThread extends Thread{
 						sign(str);
 					}
 					if(str.indexOf("/pop")==0){
-						popup(str);
+						popUp(str);
 					}
 				}
 				if(ob instanceof String[][]){
@@ -157,23 +162,40 @@ class InputThread extends Thread{
 			wm2.setLocation(500, 500);
 			wm2.setModal(true);
 			wm2.setVisible(true);
-		
 		}
 	}
-	public void popup(String line){
+	public void popUp(String line){
 		String pop = line.substring(7);
 		int index = pop.indexOf("/");
 		String title = pop.substring(0,index);
 		String str = pop.substring(index+1);
-		JPanel wmp2 = new JPanel();
-		wmp2.add(new JLabel(str));
-
-		JDialog wm2 = new JDialog();
-		wm2.setTitle(title);
-		wm2.add(wmp2);
-		wm2.setSize(200, 100);
-		wm2.setLocation(500, 500);
-		wm2.setModal(true);
-		wm2.setVisible(true);
+		JDialog popup = new JDialog();
+		
+		popup.setTitle(title);
+		popup.setResizable(false);
+		
+		popup.getContentPane().setLayout(null);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setText(str);
+		textArea.setLineWrap(true);
+		textArea.setBackground(SystemColor.menu);
+		textArea.setBounds(31, 23, 222, 61);
+		popup.getContentPane().add(textArea);
+		
+		JButton okb = new JButton("확인");
+		okb.setBounds(94, 109, 97, 23);
+		
+		okb.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				popup.dispose();
+			}
+		});
+		popup.getContentPane().add(okb);
+		popup.setSize(300, 180);
+		popup.setLocation(400, 400);
+		popup.setVisible(true);
+		popup.setModal(true);
 	}
 }					

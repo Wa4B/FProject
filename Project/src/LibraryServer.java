@@ -131,7 +131,11 @@ class ChatThread extends Thread{
 					}
 					if(line.indexOf("/sign") == 0){	
 						sign(oos,line);
-					}if(line.indexOf("/home")==0){
+					}
+					if(line.indexOf("/home")==0){
+						home(oos,line);
+					}
+					if(line.indexOf("/addbook^")==0){
 						home(oos,line);
 					}
 				}
@@ -148,7 +152,9 @@ class ChatThread extends Thread{
 					sock.close();
 			}catch(Exception ex){}		
 		}			
-	} // run				
+	} // run
+	
+	
 	public void sendmsg(String msg){				
 		int start = msg.indexOf(" ") +1;			
 		int end = msg.indexOf(" ", start);			
@@ -159,6 +165,11 @@ class ChatThread extends Thread{
 			
 		}		
 	} // sendmsg			
+	
+	public void addbook(String line){
+		
+	}
+	
 	
 	public void home(ObjectOutputStream oos, String line){
 		String str = line.substring(6);

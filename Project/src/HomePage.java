@@ -25,6 +25,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
 	protected String[][] data2;
 	protected JButton rantalb = new JButton("대여");
 	protected JButton returnb = new JButton("반납");
+	protected JButton addb = new JButton("추가");
 	protected JButton removeb = new JButton("제거");
 	protected JButton fixb = new JButton("수정");
 	
@@ -56,11 +57,12 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			Container co = new Container();
 			JPanel jlp = new JPanel(new BorderLayout());
 			JPanel scp = new  JPanel(null);
-			JPanel bp = new JPanel(new GridLayout(1,4));
+			JPanel bp = new JPanel(new GridLayout(1,5));
 			bp.add(returnb);
 			bp.add(rantalb);
 			bp.add(fixb);
 			bp.add(removeb);
+			bp.add(addb);
 			
 			jlp.add(bp,BorderLayout.SOUTH);
 			
@@ -133,6 +135,14 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		removeb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
+            }
+		});
+		addb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	AddBook ab = new AddBook();
+            	ab.setUser(userinfo);
+            	ab.setOos(oos);
+            	ab.setAction();
             }
 		});
 	}

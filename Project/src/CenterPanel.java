@@ -1,4 +1,6 @@
 
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -76,5 +78,36 @@ public class CenterPanel implements Serializable{
 	
 	public void setAction(){
 		
+	}
+	
+	public void popup(String title, String line){
+		JDialog popup = new JDialog();
+		popup.setTitle(title);
+		popup.setResizable(false);
+		
+		popup.getContentPane().setLayout(null);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setText(line);
+		textArea.setLineWrap(true);
+		
+		textArea.setBackground(SystemColor.menu);
+		textArea.setBounds(31, 23, 222, 61);
+		popup.getContentPane().add(textArea);
+		
+		JButton okb = new JButton("»Æ¿Œ");
+		okb.setBounds(94, 109, 97, 23);
+		
+		okb.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				popup.dispose();
+			}
+		});
+		popup.getContentPane().add(okb);
+		popup.setSize(300, 180);
+		popup.setLocation(400, 400);
+		popup.setVisible(true);
+		popup.setModal(true);
 	}
 }
