@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -53,6 +54,9 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		
 		
 		if(data.length > 0){
+			
+			JCheckBox jcb = new JCheckBox();
+			
 			data2 = data.clone();
 			Container co = new Container();
 			JPanel jlp = new JPanel(new BorderLayout());
@@ -66,8 +70,20 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			
 			jlp.add(bp,BorderLayout.SOUTH);
 			
-			jt = new JTable(); // 도서 데이터.
-			jt.setModel(new DefaultTableModel(data2,tname));
+			
+			
+			
+			DefaultTableModel jm = new DefaultTableModel(data2,tname){
+	            
+	            public boolean isCellEditable(int i, int c) {
+	                return false;
+	            	}
+	            
+			};
+			
+			jt = new JTable(jm); // 도서 데이터.
+			jt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			
 			jlp.add(scp,BorderLayout.NORTH);
 			jlp.add(new JScrollPane(jt),BorderLayout.CENTER);
 			jp.add(jlp);
@@ -85,8 +101,10 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			scf.setSize(100, 20);
 			scf.setLocation(500, 0);
 			
-			jt.setCellSelectionEnabled(false);
-			jt.setEnabled(false);
+			
+			jt.setEnabled(true);
+			
+			
 			
 			jlp.setSize(600, 345);
 			jlp.setLocation(200, 100);
@@ -115,6 +133,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
             	String mail = "/home scdata/"+scf.getSelectedItem().toString()+"/"+sc.getText();
             	try {
 					oos.writeObject(mail);
+					oos.flush();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -126,6 +145,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
             	String mail = "/home scdata/"+scf.getSelectedItem().toString()+"/"+sc.getText();
             	try {
 					oos.writeObject(mail);
+					oos.flush();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -134,7 +154,19 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		});
 		removeb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	int tindex = jt.getSelectedRow();
+            	String isbns = data[tindex][0];
             	
+            	String mail = "/remove "+isbns;
+            	System.out.println(isbns);
+            	
+            	try {
+					oos.writeObject(mail);
+					oos.flush();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
 		});
 		addb.addActionListener(new ActionListener() {

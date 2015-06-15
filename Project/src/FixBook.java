@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class AddBook extends CenterPanel{
+public class FixBook extends CenterPanel{
 	private JTextField isbntf;
 	private JTextField titletf;
 	private JTextField authortf;
@@ -21,10 +21,10 @@ public class AddBook extends CenterPanel{
 	private JDialog jf;
 	private JLabel pricelabel;
 	private JTextField pricetf;
-	AddBook(){
+	FixBook(){
 		
 		jf = new JDialog();
-		jf.setTitle("도서 추가");
+		jf.setTitle("도서 수정");
 		
 		
 		jf.setResizable(false);
@@ -71,7 +71,7 @@ public class AddBook extends CenterPanel{
 		panel.add(comtf);
 		comtf.setColumns(10);
 		
-		saveb = new JButton("저장");
+		saveb = new JButton("수정");
 		saveb.setBounds(48, 256, 97, 23);
 		panel.add(saveb);
 		
@@ -127,7 +127,7 @@ public class AddBook extends CenterPanel{
 					
 				}
 				
-				str = "/addbook^"+isbns+"^"+titles+"^"+authors+"^"+coms+"^"+prices;
+				str = "/fixbook^"+isbns+"^"+titles+"^"+authors+"^"+coms+"^"+prices;
 				if(str.indexOf("^^")!=-1||pricheck){
 					popup("입력 오류","잘못된 항목이 있습니다.");
 				}else{

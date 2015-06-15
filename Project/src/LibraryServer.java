@@ -136,7 +136,14 @@ class ChatThread extends Thread{
 						home(oos,line);
 					}
 					if(line.indexOf("/addbook^")==0){
-						home(oos,line);
+						addbook(oos,line);
+					}
+					if(line.indexOf("/fix^")==0){
+						fixbook(oos,line);
+					}
+					if(line.indexOf("/remove")==0){
+						
+						removebook(oos,line);
 					}
 				}
 				
@@ -165,8 +172,67 @@ class ChatThread extends Thread{
 			
 		}		
 	} // sendmsg			
+	public void fixbook(ObjectOutputStream oos,String line){
+		String str = line.substring(9);
+		int set[] = new int[4];
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = str.indexOf("^");
+			}else{
+				set[i] = str.indexOf("^",set[i-1]+1);
+			}
+		}
+		String isbn = str.substring(0, set[0]);
+		String title = str.substring(set[0]+1, set[1]);
+		String author = str.substring(set[1]+1, set[2]);
+		String com = str.substring(set[2]+1,set[3]);
+		int price = Integer.parseInt(str.substring(set[3]+1));
+		int year = 0;
+		Book fbook = new Book(isbn,title,author,year,price,com);
+		
+		
+		
+	}
+	public void removebook(ObjectOutputStream oos,String line){
+		
+		String str = line.substring(8);
+		
+		
+		for(int i = 0 ; i < book.size(); i += 1){
+			if(book.get(i).getisbn().equals(str)){
+				
+				book.remove(i);
+				try {
+					oos.writeObject("/popup 데이터 삭제/데이터 삭제를 완료하였습니다.");
+					oos.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				break;
+			}
+		}
+		home(oos,"/home getdata 0");
+	}
 	
-	public void addbook(String line){
+	public void addbook(ObjectOutputStream oos,String line){
+		String str = line.substring(9);
+		int set[] = new int[4];
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = str.indexOf("^");
+			}else{
+				set[i] = str.indexOf("^",set[i-1]+1);
+			}
+		}
+		String isbn = str.substring(0, set[0]);
+		String title = str.substring(set[0]+1, set[1]);
+		String author = str.substring(set[1]+1, set[2]);
+		String com = str.substring(set[2]+1,set[3]);
+		int price = Integer.parseInt(str.substring(set[3]+1));
+		
 		
 	}
 	
