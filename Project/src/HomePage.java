@@ -155,18 +155,22 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		removeb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	int tindex = jt.getSelectedRow();
-            	String isbns = data[tindex][0];
+            	if(tindex != -1){
+            		String isbns = data[tindex][0];
             	
-            	String mail = "/remove "+isbns;
-            	System.out.println(isbns);
+            		String mail = "/remove "+isbns;
+            		System.out.println(isbns);
             	
-            	try {
-					oos.writeObject(mail);
-					oos.flush();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+            		try {
+						oos.writeObject(mail);
+						oos.flush();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+            	}else{
+            		popup("오류","제거할 테이블을 선택하여 주세요.");
+            	}
             }
 		});
 		addb.addActionListener(new ActionListener() {
@@ -175,6 +179,17 @@ public class HomePage  extends CenterPanel  implements Serializable{
             	ab.setUser(userinfo);
             	ab.setOos(oos);
             	ab.setAction();
+            }
+		});
+		fixb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	if(jt.getSelectedRow() != -1){
+            		FixBook fb = new FixBook(data[jt.getSelectedRow()]);
+            		fb.setOos(oos);
+            		fb.setAction();
+            	}else{
+            		popup("오류", "수정할 테이블을 고르세요.");
+            	}
             }
 		});
 	}

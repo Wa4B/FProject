@@ -8,7 +8,7 @@ public class Book implements Serializable{
 	private int price; //도서가격
 	private int year; //출판연도
 	private String com; //출판사
-	Book(String isbn, String title, String author, int price ,int year, String com){
+	Book(String isbn, String title, String author, String com){
 		this.isbn = isbn;
 		this.title = title;
 		this.author = author;

@@ -62,7 +62,7 @@ public class Booklistmaker {
 					isbn = "a" + n;
 				}
 				
-				book.add(new Book(isbn,title,Author,price,years[(int)(Math.random()*15)],com));
+				book.add(new Book(isbn,title,Author,com));
 				n +=1;
 				
 				

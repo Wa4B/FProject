@@ -19,8 +19,7 @@ public class AddBook extends CenterPanel{
 	private JButton saveb;
 	private JButton cancleb;
 	private JDialog jf;
-	private JLabel pricelabel;
-	private JTextField pricetf;
+
 	AddBook(){
 		
 		jf = new JDialog();
@@ -79,17 +78,9 @@ public class AddBook extends CenterPanel{
 		cancleb.setBounds(171, 256, 97, 23);
 		panel.add(cancleb);
 		
-		pricelabel = new JLabel("가격");
-		pricelabel.setBounds(20, 211, 57, 15);
-		panel.add(pricelabel);
-		
-		pricetf = new JTextField();
-		pricetf.setBounds(89, 208, 193, 18);
-		panel.add(pricetf);
-		pricetf.setColumns(10);
 		jf.setVisible(true);
 		jf.setSize(300, 334);
-		
+		jf.setLocation(400, 400);
 		
 		addAction();
 		
@@ -108,27 +99,9 @@ public class AddBook extends CenterPanel{
 				String titles = titletf.getText();
 				String authors = authortf.getText();
 				String coms = comtf.getText();
-				String prices = pricetf.getText();
 				
-				String nums[] = {"0","1","2","3","4","5","6","7","8","9"};
-				boolean pricheck = false;
-				for(int i = 0 ; i < prices.length();i += 1){
-					for(int j = 0 ; j < 10; j += 1){
-						if(nums[j].equals(prices.substring(i, i))){
-							pricheck = true;
-						}
-					}
-					if(pricheck==false){
-						pricheck = true;
-						break;
-					}else{
-						pricheck = false;
-					}
-					
-				}
-				
-				str = "/addbook^"+isbns+"^"+titles+"^"+authors+"^"+coms+"^"+prices;
-				if(str.indexOf("^^")!=-1||pricheck){
+				str = "/addbook^"+isbns+"^"+titles+"^"+authors+"^"+coms;
+				if(str.indexOf("^^")!=-1){
 					popup("입력 오류","잘못된 항목이 있습니다.");
 				}else{
 					try {
