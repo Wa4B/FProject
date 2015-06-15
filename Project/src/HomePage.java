@@ -57,6 +57,7 @@ public class HomePage  extends CenterPanel  implements Serializable{
 		logoutb.setSize(100, 50);
 		logoutb.setLocation(50,300);
 		*/
+		
 		if(data.length > 0){
 			
 			JCheckBox jcb = new JCheckBox();
@@ -72,9 +73,9 @@ public class HomePage  extends CenterPanel  implements Serializable{
 			bp.add(removeb);
 			bp.add(addb);
 			
-			
-			jlp.add(bp,BorderLayout.SOUTH);
-			
+			if(userinfo.getpow().equals("admin")){
+				jlp.add(bp,BorderLayout.SOUTH);
+			}
 			
 			
 			
