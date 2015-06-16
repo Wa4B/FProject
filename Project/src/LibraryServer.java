@@ -77,7 +77,7 @@ class ChatThread extends Thread{
 	private ArrayList<CenterPanel> cplist;	
 	
 	private String libname ;
-	private User userinfos = new User(null,null,null,0, null,null);
+	private User userinfos = new User(null,null,null,0, null,null); //유저 정보.
 	
 	
 	public ChatThread(Socket sock, DataManager dm){	

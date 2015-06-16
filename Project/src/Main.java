@@ -144,6 +144,7 @@ class InputThread extends Thread{
 			}catch(Exception ex){}		
 		}			
 	} // InputThread	
+	
 	public void sign(String line){
 		String res = line.substring(6);
 		
