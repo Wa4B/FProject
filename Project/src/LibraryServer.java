@@ -107,14 +107,18 @@ class ChatThread extends Thread{
 			this.oos = oos;
 			this.ois = ois;
 			libname = (String)ois.readObject();
-			
+			boolean libcheck = false;
 			for(int i = 0 ; i < library.size() ; i+= 1){
 				System.out.println(library.get(i).getBook().size()+"ddd");
+				
 				if(library.get(i).getName().equals(libname)){
 					book = library.get(i).getBook();
-					
+					libcheck =true;
 					break;
 				}
+			}
+			if(libcheck == false){
+				library.add(new LibraryBook(libname, new ArrayList<Book>()));
 			}
 
 			//broadcast(strtime+" "+id + "님이 접속하였습니다.");	
@@ -240,22 +244,39 @@ class ChatThread extends Thread{
 		String list[] = {"미대출","미대출"};
 		Book fbook = new Book(isbns,title,author,com,2,list,0);
 		
-		for(int i = 0 ; i < book.size(); i += 1){
-			if(book.get(i).getisbn().equals(fisbn)){
-				
-				book.set(i, fbook);
-				try {
-					oos.writeObject("/popup 데이터 수정/데이터 수정을 완료하였습니다.");
-					oos.flush();
-					dm.SaveLibrary();
-					dm.OpenLibrary();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
+		boolean check = true;
+		for(int i = 0 ; i < book.size() ; i +=1){
+			if(book.get(i).getisbn().equals(isbns)&&!book.get(i).getisbn().equals(fisbn)){
+				check = false;
 				break;
+			}
+		}
+		
+		if(check){
+			for(int i = 0 ; i < book.size(); i += 1){
+				if(book.get(i).getisbn().equals(fisbn)){
+					
+					book.set(i, fbook);
+					try {
+						oos.writeObject("/popup 데이터 수정/데이터 수정을 완료하였습니다.");
+						oos.flush();
+						dm.SaveLibrary();
+						dm.OpenLibrary();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
+		}else{
+			try {
+				oos.writeObject("/popup 데이터 수정 실패/코드가 겹치는 책이 있습니다.");
+				oos.flush();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		home(oos,"/home getdata 0");
@@ -304,18 +325,37 @@ class ChatThread extends Thread{
 		String author = str.substring(set[1]+1, set[2]);
 		String com = str.substring(set[2]+1);
 		String list[] = {"미대출","미대출"};
-		book.add(new Book(isbn,title,author,com,2,list,0));
-		try {
-			oos.writeObject("/popup 데이터 추가/데이터 추가를 완료하였습니다.");
-			oos.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		dm.SaveBook();
-		dm.OpenBook();
-		home(oos,"/home getdata 0");
 		
+		boolean check = true;
+		for(int i = 0 ; i < book.size() ; i +=1){
+			if(book.get(i).getisbn().equals(isbn)){
+				check = false;
+				break;
+			}
+		}
+		if(check){
+		book.add(new Book(isbn,title,author,com,2,list,0));
+			try {
+				oos.writeObject("/popup 데이터 추가/데이터 추가를 완료하였습니다.");
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dm.SaveBook();
+			dm.OpenBook();
+			
+		}else{
+			try {
+				oos.writeObject("/popup 데이터 추가 실패/겹치는 코드가 존재합니다.");
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		home(oos,"/home getdata 0");
 	}
 	
 	
