@@ -39,11 +39,11 @@ public class LibraryServer {
 			
 			ArrayList<Book> book = new ArrayList<Book>();
 			ArrayList<User> user = new ArrayList<User>();	
-			ArrayList<Library> library = new ArrayList<Library>();	
+			ArrayList<LibraryBook> library = new ArrayList<LibraryBook>();	
 			ArrayList<CenterPanel> cplist = new ArrayList<CenterPanel>();	
 			
-			DataManager dm = new DataManager(book,user,library,cplist);
 			
+			DataManager dm = new DataManager(book,user,library,cplist);
 			
 			while(true){	
 				Socket sock = server.accept();
@@ -70,13 +70,14 @@ class ChatThread extends Thread{
 	private DataManager dm;
 	private boolean initFlag = false;	
 	
-	private ArrayList<Book> book;
+	private ArrayList<Book> book;  //서버에 저장된 전채 책들
+	private ArrayList<Book> libbook; //해당 도서관에있는 책들
 	private ArrayList<User> user;	
-	private ArrayList<Library> library;	
+	private ArrayList<LibraryBook> library;	
 	private ArrayList<CenterPanel> cplist;	
 	
 	private String libname ;
-	private User userinfo;
+	private User userinfos = new User(null,null,null,0, null,null);
 	
 	
 	public ChatThread(Socket sock, DataManager dm){	
@@ -87,6 +88,8 @@ class ChatThread extends Thread{
 		this.user = dm.getuser();
 		this.library = dm.getlibrary();
 		this.cplist = dm.getcplist();
+		
+		
 		
 		
 		
@@ -104,6 +107,15 @@ class ChatThread extends Thread{
 			this.oos = oos;
 			this.ois = ois;
 			libname = (String)ois.readObject();
+			
+			for(int i = 0 ; i < library.size() ; i+= 1){
+				System.out.println(library.get(i).getBook().size()+"ddd");
+				if(library.get(i).getName().equals(libname)){
+					book = library.get(i).getBook();
+					
+					break;
+				}
+			}
 
 			//broadcast(strtime+" "+id + "님이 접속하였습니다.");	
 			System.out.println(libname + "에서 접속");	
@@ -125,14 +137,33 @@ class ChatThread extends Thread{
 			while((ob = ois.readObject()) != null){	
 				if(ob instanceof String){
 					String line = (String)ob;
-					
+					System.out.println(line);
 					if(line.indexOf("/login") == 0){
 						login(oos,line);
 					}
 					if(line.indexOf("/sign") == 0){	
 						sign(oos,line);
-					}if(line.indexOf("/home")==0){
+					}
+					if(line.indexOf("/home")==0){
 						home(oos,line);
+					}
+					if(line.indexOf("/addbook^")==0){
+						addbook(oos,line);
+					}
+					if(line.indexOf("/fixbook^")==0){
+						fixbook(oos,line);
+					}
+					if(line.indexOf("/remove")==0){
+						
+						removebook(oos,line);
+					}
+					if(line.indexOf("/rtbook")==0){
+						
+						rtbook(oos,line);
+					}
+					if(line.equals("/logout")){
+						this.userinfos = new User(null,null,null,0, null,null);
+						sandPanel(oos,"MainPage");
 					}
 				}
 				
@@ -148,17 +179,145 @@ class ChatThread extends Thread{
 					sock.close();
 			}catch(Exception ex){}		
 		}			
-	} // run				
-	public void sendmsg(String msg){				
-		int start = msg.indexOf(" ") +1;			
-		int end = msg.indexOf(" ", start);			
-		if(end != -1){			
-			String to = msg.substring(start, end);		
-			String msg2 = msg.substring(end+1);		
+	} // run
+	
+	
+
+	
+	public void logout(ObjectOutputStream oos){
+		
+		
+		
+	}
+	
+	public void rtbook(ObjectOutputStream oos,String line){
+		String str = line.substring(7);
+		
+		int set[] = new int[2];
+		for(int i = 0 ; i < set.length ; i += 1){
+			if(i == 0){
+				set[i] = str.indexOf(" ");
+			}else{
+				set[i] = str.indexOf(" ", set[i-1]+1);
+			}
+		}
+		String ID = str.substring(0, set[0]);
+		String PW = str.substring(set[0]+1, set[1]);
+		String Isbn = str.substring(set[1]+1);
+		boolean idcheck = false;
+		for(int i = 0 ; i < user.size() ; i += 1){
+			if(user.get(i).getID().equals(ID)){
+				if(user.get(i).getPW().equals(PW)){
+					idcheck = true;
+					break;
+				}else{
+					idcheck= false;
+					break;
+				}
+			}
+		}//idcheck
+		
+		if(idcheck==true){
 			
-			
-		}		
-	} // sendmsg			
+		}
+	}
+	
+	public void fixbook(ObjectOutputStream oos,String line){
+		String str = line.substring(9);
+		int set[] = new int[4];
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = str.indexOf("^");
+			}else{
+				set[i] = str.indexOf("^",set[i-1]+1);
+			}
+		}
+		String fisbn = str.substring(0, set[0]);
+		String isbns = str.substring(set[0]+1, set[1]);
+		String title = str.substring(set[1]+1, set[2]);
+		String author = str.substring(set[2]+1, set[3]);
+		String com = str.substring(set[3]+1);
+		String list[] = {"미대출","미대출"};
+		Book fbook = new Book(isbns,title,author,com,2,list,0);
+		
+		for(int i = 0 ; i < book.size(); i += 1){
+			if(book.get(i).getisbn().equals(fisbn)){
+				
+				book.set(i, fbook);
+				try {
+					oos.writeObject("/popup 데이터 수정/데이터 수정을 완료하였습니다.");
+					oos.flush();
+					dm.SaveLibrary();
+					dm.OpenLibrary();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				break;
+			}
+		}
+		home(oos,"/home getdata 0");
+		
+		
+	}
+	public void removebook(ObjectOutputStream oos,String line){
+		
+		String str = line.substring(8);
+		
+		
+		for(int i = 0 ; i < book.size(); i += 1){
+			if(book.get(i).getisbn().equals(str)){
+				
+				book.remove(i);
+				try {
+					oos.writeObject("/popup 데이터 삭제/데이터 삭제를 완료하였습니다.");
+					oos.flush();
+					dm.SaveBook();
+					dm.OpenBook();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				break;
+			}
+		}
+		
+		home(oos,"/home getdata 0");
+	}
+	
+	public void addbook(ObjectOutputStream oos,String line){
+		String str = line.substring(9);
+		int set[] = new int[3];
+		for(int i = 0 ; i< set.length ; i += 1){
+			if(i == 0){
+				set[0] = str.indexOf("^");
+			}else{
+				set[i] = str.indexOf("^",set[i-1]+1);
+			}
+		}
+		String isbn = str.substring(0, set[0]);
+		String title = str.substring(set[0]+1, set[1]);
+		String author = str.substring(set[1]+1, set[2]);
+		String com = str.substring(set[2]+1);
+		String list[] = {"미대출","미대출"};
+		book.add(new Book(isbn,title,author,com,2,list,0));
+		try {
+			oos.writeObject("/popup 데이터 추가/데이터 추가를 완료하였습니다.");
+			oos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		dm.SaveBook();
+		dm.OpenBook();
+		home(oos,"/home getdata 0");
+		
+	}
+	
 	
 	public void home(ObjectOutputStream oos, String line){
 		String str = line.substring(6);
@@ -223,6 +382,10 @@ class ChatThread extends Thread{
         		{
         			cbook.add(data[i]);
         			continue;
+        		}else if(data[i][0].indexOf(sct)!= -1&&(scf.equals("전체")||scf.equals("코드")))
+        		{
+        			cbook.add(data[i]);
+        			continue;
         		}
         		
         		
@@ -258,6 +421,8 @@ class ChatThread extends Thread{
 		
 		try {
 			int indexnum = -1;
+			oos.writeObject(userinfos);
+			oos.flush();
 			System.out.println(cplist.size());
 			for(int i = 0; i< cplist.size(); i+=1){
 				if(cplist.get(i).getName().equals(name)){
@@ -265,20 +430,15 @@ class ChatThread extends Thread{
 					break;
 				}
 			}
+			CenterPanel cp = new CenterPanel();
+			cp = cplist.get(indexnum);
+
 			
-			if(!name.equals("MainPage")){
-				cplist.get(indexnum).setUser(userinfo);
+			if(name.equals("HomePage")){
+				//System.out.println(cplist.get(indexnum).userinfo.getname());
 			}
-			if(indexnum != -1&&name.equals("HomPage")){
-				String[] bookdat = new String[20];
-				for(int i = 0; i < book.size();i+=1){
-					bookdat[i] = book.get(i).gettitle();
-				}
-				
-			}
-			
 			//oos.writeObject(cplist.get(indexnum));
-			oos.writeObject(cplist.get(indexnum));
+			oos.writeObject(cp);	
 			oos.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -319,7 +479,8 @@ class ChatThread extends Thread{
 			}// catch
 		}else{
 			
-			this.userinfo = user.get(userindex);
+			this.userinfos = user.get(userindex);
+			
 			sandPanel(oos,"HomePage");
 		}
 		

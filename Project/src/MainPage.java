@@ -194,6 +194,9 @@ public class MainPage extends CenterPanel  implements Serializable{
 						String userbirt = (String)birtbox[0].getSelectedItem()+birtbox[1].getSelectedItem()+birtbox[2].getSelectedItem();
 						String power = signt[4].getText();
 						String mail;
+						if(power.equals(null)){
+							power = "normal";
+						}
 						
 						String allstr = ID+PW+username+userbirt+power;
 						

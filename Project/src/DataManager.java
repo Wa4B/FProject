@@ -11,20 +11,22 @@ public class DataManager {
 	
 	private ArrayList<Book> book = new ArrayList<Book>();
 	private ArrayList<User> user = new ArrayList<User>();	
-	private ArrayList<Library> library = new ArrayList<Library>();	
+	private ArrayList<LibraryBook> library = new ArrayList<LibraryBook>();	
 	private ArrayList<CenterPanel> cplist = new ArrayList<CenterPanel>();	
 	
 	public static void main(String arg[]){
 		DataManager dm = new DataManager();
-		dm.Allsave();
+		dm.SaveUser();
+		dm.SaveBook();
 	}
 	
-	DataManager(ArrayList<Book> book,ArrayList<User> user,ArrayList<Library> library,ArrayList<CenterPanel> cplist){
+	DataManager(ArrayList<Book> book,ArrayList<User> user,ArrayList<LibraryBook> library,ArrayList<CenterPanel> cplist){
 		this.book = book;
 		this.user = user;
 		this.library = library;
 		this.cplist = cplist;
 		Allopen();
+		
 	}
 	DataManager(){
 		
@@ -36,7 +38,7 @@ public class DataManager {
 	ArrayList<User> getuser(){
 		return user;
 	}
-	ArrayList<Library> getlibrary(){
+	ArrayList<LibraryBook> getlibrary(){
 		return library;
 	}
 	ArrayList<CenterPanel> getcplist(){
@@ -132,7 +134,7 @@ public class DataManager {
 			
 			
 			for(int i = 0 ; i < list.size() ; i+=1){
-				library.add((Library)list.get(i));
+				library.add((LibraryBook)list.get(i));
 			}
 			
 			System.out.println("library.dat open.");

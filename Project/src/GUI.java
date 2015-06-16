@@ -7,15 +7,21 @@ import javax.swing.*;
 public class GUI {
 	
 	CenterPanel jp;
+	private User user;
 	
 	private MainFrame mf;
 	GUI(){
 		
 		mf =new MainFrame();
 	}
+	public void setuser(User userinfo){
+		this.user= userinfo;
+	}
 	public void setCenter(CenterPanel jp){
 		this.jp = jp;
+		this.jp.setUser(user);
 		this.jp.setAction();
+		
 		setpanel();
 	}
 	public void setData(String [][] data){
